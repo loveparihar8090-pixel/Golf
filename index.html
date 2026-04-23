@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hamoni: Cafe by the Greens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#C9A84C;--gold2:#E8A838;--black:#0A0A0A;--ivory:#F5F0E8}
+html{scroll-behavior:auto}
+body{background:var(--black);color:var(--ivory);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:24px 48px}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;letter-spacing:.18em;color:var(--ivory);text-transform:uppercase;opacity:0;animation:fadeUp 1s .4s forwards}
+.nav-links{display:flex;gap:36px;list-style:none;opacity:0;animation:fadeUp 1s .7s forwards}
+.nav-links a{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ivory);text-decoration:none;opacity:.65;transition:opacity .3s}
+.nav-links a:hover{opacity:1}
+
+/* HERO */
+#hero{position:relative;height:700vh}
+.hero-sticky{position:sticky;top:0;width:100%;height:100vh;overflow:hidden}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.65) 100%);pointer-events:none}
+.overlay{position:absolute;inset:0;pointer-events:none}
+
+/* TEXT BLOCKS */
+.tb{position:absolute;width:100%;text-align:center;opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.tb.on{opacity:1;transform:translateY(0)}
+
+#t1{top:50%;transform:translateY(calc(-50% + 24px))}
+#t1.on{transform:translateY(-50%)}
+#t1 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,7vw,100px);font-weight:300;font-style:italic;color:var(--ivory);line-height:1.08;letter-spacing:.02em;text-shadow:0 2px 40px rgba(0,0,0,.5)}
+
+#t2{bottom:22%}
+#t2 p{font-size:10px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+
+#t3{top:50%;transform:translateY(calc(-50% + 24px))}
+#t3.on{transform:translateY(-50%)}
+#t3 .b1{display:block;font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,78px);font-weight:300;color:var(--ivory);letter-spacing:.1em;text-transform:uppercase}
+#t3 .b2{display:block;font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.4vw,34px);font-style:italic;color:var(--gold);margin-top:10px}
+
+#t4{top:50%;transform:translateY(calc(-50% + 24px))}
+#t4.on{transform:translateY(-50%);pointer-events:all}
+.cta-sub{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.45);margin-bottom:28px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;padding:15px 40px;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .4s;cursor:pointer}
+.cta-btn:hover{background:rgba(201,168,76,.17);border-color:rgba(201,168,76,.75);box-shadow:0 0 32px rgba(201,168,76,.18)}
+
+/* SCROLL CUE */
+.scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fadeUp 1.2s 1.8s forwards}
+.sc-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scPulse 1.6s ease-in-out infinite}
+.sc-txt{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.6}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--black);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .9s ease}
+#loader.hidden{opacity:0;pointer-events:none}
+.ld-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:.22em;color:var(--ivory);text-transform:uppercase}
+.ld-bar{width:180px;height:1px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+.ld-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:var(--gold);transition:width .08s linear}
+.ld-pct{font-size:10px;letter-spacing:.2em;color:var(--gold);opacity:.75}
+
+/* PLACEHOLDER NEXT SECTION */
+.next{min-height:100vh;background:#0D0D0D;display:flex;align-items:center;justify-content:center}
+.next p{font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(245,240,232,.15);font-style:italic;letter-spacing:.12em}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scPulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+@media(max-width:768px){nav{padding:18px 20px}.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="ld-brand">Hamoni</div>
+  <div class="ld-bar"><div class="ld-fill" id="lf"></div></div>
+  <div class="ld-pct" id="lp">0%</div>
+</div>
+
+<nav>
+  <div class="nav-logo">Hamoni · Cafe by the Greens</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#golf">Golf</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Visit</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-sticky">
+    <canvas id="c"></canvas>
+    <div class="vignette"></div>
+    <div class="overlay">
+      <!-- T1: frames 1-30 -->
+      <div class="tb" id="t1"><h1>Where Greens<br>Meet Grace</h1></div>
+      <!-- T2: frames 61-90 -->
+      <div class="tb" id="t2"><p>A Cafe &nbsp;·&nbsp; A Course &nbsp;·&nbsp; A Culture</p></div>
+      <!-- T3: frames 131-160 -->
+      <div class="tb" id="t3"><span class="b1">Hamoni</span><span class="b2">Cafe by the Greens · Gurugram</span></div>
+      <!-- T4 + CTA: frames 175-210 -->
+      <div class="tb" id="t4">
+        <p class="cta-sub">Since 2016 · Haryana's Finest</p>
+        <a href="#menu" class="cta-btn">Explore the Experience &nbsp;↓</a>
+      </div>
+    </div>
+    <div class="scroll-cue"><div class="sc-txt">Scroll</div><div class="sc-line"></div></div>
+  </div>
+</section>
+
+<section class="next"><p>Sections 02 – 10 · Coming Soon</p></section>
+
+<script>
+// ── ALL 210 FRAME IDs (Google Drive) ──
+const IDS = {
+  1:'1nS38u49vCv4oM0cXarVRhVs6VlBJbitv',
+  2:'1llordN--j8sd88Xlay4WXvnzhSb7s_Wi',
+  3:'1uAHkAJPeJljNh5JyCMBk6hvgchHnFnz9',
+  4:'1vnQ71Wuiy4K6orCtJFLm6zyBh4MxYG9x',
+  5:'1FFc35dLWfr1xnvkQTT7AND-UihF_zYAG',
+  6:'1gDOIkglYMvj6LNWRvqzA7LqWCSR_uq7E',
+  7:'1tVQUQ49Iy0_2cOzWekXlIZ-huD6S5FED',
+  8:'1RR99x0iM4oPKAKtSENkjIpgZ6-NVKyzR',
+  9:'1t2cBIaU2WD2tquUbV5lcceWNZ3lTPz8j',
+  10:'1aYw3uMqcx00swoA7Y6sv73HYLrK_h8NN',
+  11:'1uIoIY0I4WL7s3brdsBWt01rjMm6mL3HW',
+  12:'1wQXyJcIEa0rjAjGowHTFRoralUZscqz_',
+  13:'1MvVpGkQxPXWx3eiJzlGx-X1v21jmDqHO',
+  14:'1O5jk1p1t1Fh6zzBnjgty3F8WQZYUHGqb',
+  15:'1Ia-5jRroQ-39w7aGoYwECm1Gj_54kS_J',
+  16:'1E5kn1NmySeXm8B7mRPdJzvfFee_txjNy',
+  17:'1rd0RyPppmtwso3jM_pfWn1ljsIzhzo65',
+  18:'1ozy1bprP1CkRE7h2M_cIEJgmAg0QkApo',
+  19:'1G5DF5Hw40KtyXs2cOWcJHbXCUpfEvDwn',
+  20:'1iBt7eG8a7XDFK-OsQXooxAsj1oUph1W_',
+  21:'1Ghj65gF75ZgWLe7jkzC_ZhI8fAyF_ja8',
+  22:'1xlhFjHJAvriT0xBgv_5as9NgSnKyRfuD',
+  23:'1yV1CPbTmOvnKxFYUZBvHFVP1Dxf_ouup',
+  24:'1k9VMO0p501yWIelZhqGI8EPeAXnuZoBT',
+  25:'1hOVSpqL7OOzss5U0xQVyqyvDSnrrMC9e',
+  26:'1CzqnXwwKR2cY8gZKHDKWMb2YKR0sYIuY',
+  27:'1ThEcfX_oGxaZNbARORwRHfyV_6zd8L7k',
+  28:'1xbk_sXjQQZuWECeAz3SzaKIFYpYoyhm1',
+  29:'11Rrmdzivh_Q3v9gnWnKCrcFrVKX39mZa',
+  30:'1M-hDEt2EyEeGlCAF72nV8YYKRUEH3D9y',
+  31:'1tQ19auXpAOD4RYTGsaxPPIizgt36AW0g',
+  32:'1wdsGXjKzbnyiGlsLBRheb5CiENONbtva',
+  33:'18mpVC2cPlMP4X0ZCbQGuBvtzTm3QVQsd',
+  34:'18Qr1ukV6gzCp_-NRhggCjIvmze__U-f9',
+  35:'1-aacjBh8S-bqHx5gfZWU2CBKgqWKgM9s',
+  36:'1Br_1ARVhyGA61BSwXkT5qx1RDI8bXDrt',
+  37:'11qKJ9Dc7_H0Ri0jAI4U7nLfpuUICEkAd',
+  38:'17Td7FkaxtSKGUNHGzX6EXIdGvPnM_LYn',
+  39:'1l1Zh0-Jf1GXwjJsMxYwhv62ogeMfKngZ',
+  40:'1P1747JoaTuT07p9PTcDohsdeJHr2b7fQ',
+  41:'1pcMuDOrk1VlwYGXOBQs3INSguIwhdZfX',
+  42:'1FcLusGtvABgT9zCWxxdO8clltrsi0Ud3',
+  43:'1uqUDDpy1aDXIvO8SO-yNqg27xQy8LMFY',
+  44:'1Qsn3M-t--zD-LfI94Sv5LJw4k6FUiYOx',
+  45:'1etwCPexcJutzD-ls8X72p4SBteVMA71K',
+  46:'1dHzAqGWTiY5BHpcDCZbQNIHVx2iTVnf9',
+  47:'1XT5-U4h3ptHKHGdAsTHeCeS8KywX8gMR',
+  48:'1BGHcFT1rO8OtPhc7-MnlRr_YI8YusU8q',
+  49:'1meCBo7p1mx31veFlteqzh_oKMqZKneZF',
+  50:'15aPf6GhWoZheJKmz70t_OTWaHAu3bYFx',
+  51:'1838Arw12TNUl4Yk6ROR7fezFF_vt8IQo',
+  52:'1izoFVzjsIpn1JvNGMmgTQ5VQr5nS0QgE',
+  53:'1J_P3Cgr5XNtRrTfEFfgnnJbFWnjR7R4-',
+  54:'1upS4Y3q28DkFEUW_oCnp63VTl_RfRMEm',
+  55:'1milfOebyjxlcr-cCQJ8MZCMlYWXBUEf6',
+  56:'1xiL9B9irtdfm8rgoNyWYfE5Vo_PnaYUC',
+  57:'1y_qbcOWFIEtVXRppBDSETLjQUrWRa0vZ',
+  58:'1OMzOrPgMbQTup97raf7ncZNRLE0heCfF',
+  59:'1Bw-6oz-ycAvT7o8yyIFOLx9akm_3_mCg',
+  60:'1M0uqrRmrc_T3AxX3yIZwDTzSYu-V3nKT',
+  61:'1I2zieX_XHYW3h1zjw9IwFZNQbjtkH-DU',
+  62:'1lL5og4phYFWsFrJ6EnQw4UIq7Sotqg0e',
+  63:'1z1AtRKeEXzQyQspSCMWvxv_m1aF8aa9I',
+  64:'199YtGcUXVJTiarjdRw4tO-N7Wb86rT4O',
+  65:'1CfnFu3YdFRb2hj8RkMP5kxNlhtu1viVJ',
+  66:'1H4hks7FBsS_9qgJZJxXQia8WUutHq9Fz',
+  67:'1gEAoNtrFY9IoXZ82AhTiDovs1E4BlzW_',
+  68:'1nvSdYIicJ_832dLNSLHlm0e2horS9B9T',
+  69:'1lxIyKxnSGs3AiL5eBIT19icVwMOud-3r',
+  70:'1SzZZp3j6yD73dSbDbMDZ1R3O2WGVzZ2R',
+  71:'19jBdwwZZefdAPVzgfpsj_F_B3SpS6XuG',
+  72:'1IvXdqHgJHW1tOBwQUUB1wmNlKCjOkMzO',
+  73:'1CNrhzbCPesoXI4o5E-gAanLggBf3r9Fb',
+  74:'1LJi4-7Vw8Xsdmk8pqc5i5rygs-tiri7v',
+  75:'1q4FreX-tUIc-l9-LZNPHMeH5UcCxFCiB',
+  76:'1hcAEs_X6Jl34MqSBupVklXzCZJlIerWC',
+  77:'1UrN0GeUOm44k3GCBM7eFUKm7n7S-l7HT',
+  78:'1HFTnSaHjhcLOL3_hwwd7pwpjbfYP5xSZ',
+  79:'1pLWwaP0oOv-VD79uuXtLfA-0QksjcTx1',
+  80:'13mtrfGHPUUy38va87060XX41yFnvLgML',
+  81:'1P5s-ZXjjNYlkIQyec3DCvsX7oB6LmrLF',
+  82:'1N9dpbdEicOvoh5Qg13VGVtHR0o_d3B5L',
+  83:'1Vr6h864Fuac4y5nv6d0fmFDFaH06Jnf1',
+  84:'1rVMEOS0_WriBgRauVH7Ph5cEvuEz-3aJ',
+  85:'1CJAFy6zTGgopGt_Wt5BpL5xvzK45HV7X',
+  86:'1wBa5QHRp1Z6erKZCasepP4ceZYsqPOUc',
+  87:'1L3LbZKf78xqbAtURmOAKs5TohNJcCmhW',
+  88:'1k2tIqGthFJqs72WzHo5-WkhOAWMAUcQg',
+  89:'1MJuGqEKBFGml5CubxFpSwcq3X4Ns19pU',
+  90:'1QzurlLENN9xznFSUq2SLcOFA7dEIkjg-',
+  91:'1a_KsqZhgrNa0cOuvls4spxN1C4bvgNAl',
+  92:'1w8rqWJcWtDq153snTgGRdjBJpnNBN1Xv',
+  93:'1kbygVWuJoXQ1LQnQeU-Na7F8kgcncd55',
+  94:'11RK2hoCBL-gG_269w0w6kM_ccWF_q5ht',
+  95:'1R479oSHvj-nCE6OY1AsLFfRbgQP5QZdB',
+  96:'1rEveI0uDEatRCEZeG-xPIpjGzMjYhRoh',
+  97:'1KfeGggDDl7P65JSRvFEf5oqifwZgwkWS',
+  98:'1rsua1Gy1TkM87h_ZKDu3XgcNuZaat2D5',
+  99:'1foAXvBN_a6YGxkihPuin4lvTuiMz57L0',
+  100:'1tXt1up4jdrw3o08Mb9TeF1WyEm944HBP',
+  101:'10CWvNv3wbcQvyDcR4msCMuFzntEbg-eW',
+  102:'1sdwZ26vGxNAcedJZUIn1haoD8RRGD20T',
+  103:'11svF2MuVCfUM4nnSW6tCGNgVH5rkoiFj',
+  104:'1_js4VZCPYDDC48DpbyVFRp9fjTkm8lkP',
+  105:'1vHmO2CYFw5pmH5tjbrO-w0qIkinZLXTo',
+  106:'1VgmwVQUmFZJqNdbsGNqf0mo7JgrUukRy',
+  107:'1LsldHIfHWG4hkhro1AgJ7s3AalXd8nvP',
+  108:'1pyFGTOxpz9Lc6hzi8bwYTKTOjI0emJ98',
+  109:'1p3NffJNPtf4JDfaWxirhPNYb1eKWbJtd',
+  110:'1DMa1rdpiDTwyT_xcSJCXE_FnUu5kTRNi',
+  111:'1Xu82qcu3UvX6ygDA7ubCqkN_ytPPReUf',
+  112:'1aQa4uQZHAf0ZOcmsHQWxmLDmAJbekdPw',
+  113:'14dnYmKA1BUWNFqMCU5nbcHKd6lgyK0aR',
+  114:'1DWmGA1xReVhynPS1KqLAETiUthDzi3pz',
+  115:'1Ymlenrf2iNYLe612IvDd1L9RfxaA2yEs',
+  116:'1AN9LMpR0t8TJ2dqGvgVn5BapHG-nM-H6',
+  117:'1No3pii7xRblQ3hOrPaYf5WjSk9GOpmuI',
+  118:'1D1trG9anoOadnpyMk3Iqlshmqs2KHpA1',
+  119:'1vz2gbwDnXufr9C2Ra6-cGwkakXTDOYZc',
+  120:'1QvX2hTEsCn7wdZb48Pe1yQ7yH-RmQZV5',
+  121:'1RbIkaMVP43Puuk0f3h7Ohotz9xskGzPO',
+  122:'1io2k9araG8gJEdm38qvc2piFWLoTrRKu',
+  123:'1QlX2D7lBwboCLafSqf7MLuUSR6jpl_P-',
+  124:'1T9uFw-D6_dfEHH1-XQoccHsejxkvSLeW',
+  125:'1TOw0SIT7S_YGgK7ZhaApd4PftMkRbZDn',
+  126:'1V82KOr035Znqc4NdKhyfpiy2ZF5Epn7F',
+  127:'18nTRQG3HepZ2KXmfrUFXiWk19TpCqw7Z',
+  128:'13FUht8scywaJoSlMhA17JF86CJQ1ZyMr',
+  129:'12-zD4kaZdUaPlTWqAhEJue5NAi6C2j_c',
+  130:'1LJvnpKyz_1qrdDuGsjzkh2xLLyHSukK8',
+  131:'151asihrllpDBG_jLRNavfLK-TzpUFPMy',
+  132:'14RiV5w2DoZV1xP5Sr34PcZDQ6CAlys8Q',
+  133:'1A16QopJr_3taTObSet--YbYo2BXy2PJo',
+  134:'1rRss3NT7CMnMa0qiE49sZ7Bq3vtGoCYU',
+  135:'1vJkLHRTqsQwWilLCUJUGh4n6g-DB77CW',
+  136:'1LerzIOqD9zoL9Qv4DpHjCEONzybWCN_2',
+  137:'13TJRezCI3j0gM_8FxixFEkBhhei_xHZ9',
+  138:'1scslwJzIT7bCMPm7dRILOU79Ebl1PRr2',
+  139:'1OWYDaJyCrJ7pmk7L9pOwNBHjQLtYQf-I',
+  140:'1Tl2ontcTIbEnftqvL0voPFanH0CDwe6H',
+  141:'1z5o70FZCKNx5Q7XoFkxsvyLdeB-HmYHG',
+  142:'1ZKZ3YF6Q3qxdmA641bvSh9s0Xah2hcmC',
+  143:'1fMdWMwgDGe4lQb0TZZBMVtYpEY1eSe5o',
+  144:'1tw7fkkSXEbkNW_oym1Exilq8B_kyJNiR',
+  145:'10KZ8hzcRsWNNIE5hpEgonaiQtb1XXY1s',
+  146:'1EfdmNfNhr7RQtbgj0PlfpLXvOzenEZC6',
+  147:'1uMY0S6t7FXDhz-i0USNlELGcVtf2u14x',
+  148:'1p82ZW9nn-9QIucH-ihJVXDpvg4QG5gaZ',
+  149:'1BYY4rxgu_zFtlupEVvWgxAtYeARNoA9C',
+  150:'1y0Jte0THEi9x_EpHr4LJRngMhgr8hPzh',
+  151:'1ohP-qJVlAyqG03Unec_tG3AywX4wBC60',
+  152:'11piyfO4dTsvHyIRIs25tANmXceLfX8Cb',
+  153:'1WKqK8MXUd1lnwGldRfQyoO5wmViPOj_d',
+  154:'11tPR4RHu-8greEXHOSLzesSTk38sbYkP',
+  155:'19wWxIBSWaGNZG1MxLoEyh_m_REEe499-',
+  156:'1aB9X8Q5jJzjTlJ6nPoTv0PjS7dIhIPNW',
+  157:'1F0qV5JxjueYfCQKeZ2m6JySJdKMaxO9U',
+  158:'1iShT618NSi2LGIeDBG7yNfUw_45TaLc5',
+  159:'1Qct0di0I5bQGSaAkOn8ZiurwXrMuRe1z',
+  160:'1jZgzLqtNlHltsotDt0Fcj90xGQE8XFXn',
+  161:'1OIf773Qa1aRjjLM2ydC-gY5-KsfQDAL_',
+  162:'14KDNRQc_QuJLkAFF57UG_VWoA2xKrTW9',
+  163:'1rF3xRlrfIpgj3fVFEViVsbfXpgnDSjgL',
+  164:'1wg-lVvEEqrkL2srYoc620IaSpLfOC1Rv',
+  165:'1zBwvwlM1nIm2mvWC2YPRU9L-NF2j6f3p',
+  166:'1a0Syjsl_kMvvFtIEZbZ643L9FDAIJzJZ',
+  167:'1ocCxtQ-wNgWFMBpJseU1kA_ig6zrAjKM',
+  168:'1Tu1us4ShBnzfRYx_NkQl-0Z0h94Wyqx7',
+  169:'1Jc8XHev1NRfvjCgdqvE3Brnkz-BmWvfJ',
+  170:'1vAOjKkAa1CtGDajoETROS6jc9cBMWw7R',
+  171:'18T0vY-coUoRICbNMGZRZSoc5Wmr29cV0',
+  172:'1oUQd4loCpoFtPYUfZrf10dK_7xlt82kG',
+  173:'1nn7Ja5Vn-0-fmdmh_51rFIrw-ddaYsGa',
+  174:'1juYkoUB2DPaj5Iq353UKH2GFtKCfBDl1',
+  175:'1Yqv1mBiua8ezM0VH7P34d3cM198KGUJW',
+  176:'1JG6wB5xUZI8dN3RXuGE8mwfW-P9f7ybC',
+  177:'1Snb4oF4Rj3C3NHrlKwY5h8e87taBQxKq',
+  178:'1K0z3ysZhmvRIVngnRuTIyv662WoxGDYo',
+  179:'1knFeCVoTdmqNYjSXdeNPJfr2rO60S6dr',
+  180:'14E56t2JCeUmLpx3yMVdOYQ24OmHoOQkm',
+  181:'1DLbrQQtPYKltSYM-DGwMPExi1nDgHZWP',
+  182:'1cto-dKoBo8S17YacIFBCRSQy-kt7M2XW',
+  183:'1tJZFzeMxQm8drqXoBuf4k3ws_8GAqvvj',
+  184:'185fmXBuVGJ_6X91pTg26o_HBa-Gh_DGf',
+  185:'1A3u0Jpn-cNSEHobiXR5VO6zIt_V26epH',
+  186:'1OEX8FTZL5UaMZ-L20BiWdikpGpdT7s4R',
+  187:'1KWggGZSOs9A0BHj1jWP4lKadgfc_qqDv',
+  188:'13Of6ia4eKg6mkvBOUZanZANB5iwmtlIA',
+  189:'1rrhVDLBvXpSvq31e4mTsTXAQMg6NhKIa',
+  190:'1mUbfOblPpJCIoBc2c9epWRzEASMH9z8_',
+  191:'1a1t93PBifAuY8v0MJnKTCA631UcBUtla',
+  192:'15j_-mGr6F4D8cUQGSvq0HqiX4pOqyhJ9',
+  193:'10t-B0WkxAeQu1zOdRiwILYnmqJw_mBRj',
+  194:'1VNBQT2priIxC4ipZ2OLRuFHlCM7GH0st',
+  195:'1aF9br361E9wRglpLwy_EZARZrscEnatE',
+  196:'1oiCX6qlmQciJX3xpWh0-eexmBNBL1GLn',
+  197:'1hV1QB42f-LNOFiD4j2ksqP0s1iDh3sHY',
+  198:'1Qc69X_V0kCcBoiMt_IFjnPrQfqY6uj4l',
+  199:'1TAXU8M8RRd8mQTKPbYSxOuAi65QakTci',
+  200:'1_m_XOYr5nM3WBIUTYZpSUAFmN7EsPk5O',
+  201:'1XHIj0qLIpo6Y2PkowF77TFFXh06kY1y0',
+  202:'1_ybHLwy8g7x4Wk4m2kUxLahtVXri93Ay',
+  203:'1WhUyNITDdtqChRBZk9Cn2DrPnHCypTVC',
+  204:'19VozfQGq5QvxQmBiYV8W0-Dgm4LLVc_m',
+  205:'1Nq7iqZ2H0hF0RM93_3IO67xG9EwtK7R9',
+  206:'1rFePXtkAyxm6qboM2J0-6lbRlOISN3jm',
+  207:'10zVyiA4QhUUMAahVo2t8oHK7rrixEceR',
+  208:'1bKBVK7PnlUvjJUgvBxSi6DClTcch8KMj',
+  209:'1hJZ8Gl5PO_XisRc_OQuRR4shV24KSTXS',
+  210:'1nB30mPpwtyMtIbrvuxM7XZI8lc0UnSIn'
+};
+
+const TOTAL = 210;
+// Use thumbnail API - CORS friendly, no redirect issues
+const GD = id => `https://drive.google.com/thumbnail?id=${id}&sz=w1280`;
+
+// ── CANVAS SETUP ──
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const loader = document.getElementById('loader');
+const lf = document.getElementById('lf');
+const lp = document.getElementById('lp');
+
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resize();
+window.addEventListener('resize',()=>{resize();drawFrame(cur)});
+
+function drawFrame(n){
+  const img=imgs[n];
+  if(!img||!img.complete||!img.naturalWidth)return;
+  const cw=canvas.width,ch=canvas.height;
+  const scale=Math.max(cw/img.naturalWidth,ch/img.naturalHeight);
+  const sw=img.naturalWidth*scale,sh=img.naturalHeight*scale;
+  ctx.clearRect(0,0,cw,ch);
+  ctx.drawImage(img,(cw-sw)/2,(ch-sh)/2,sw,sh);
+}
+
+// ── PRELOAD ──
+const imgs = {};
+let loaded=0, cur=1, ready=false;
+const EAGER=30;
+let eagerDone=0;
+
+for(let i=1;i<=TOTAL;i++){
+  const img=new Image();
+  img.crossOrigin='anonymous';
+  img.onload=()=>{
+    loaded++;
+    const pct=Math.round(loaded/TOTAL*100);
+    lf.style.width=pct+'%';
+    lp.textContent=pct+'%';
+    if(i<=EAGER){
+      eagerDone++;
+      if(eagerDone===1)drawFrame(1);
+      if(eagerDone>=EAGER&&!ready){
+        ready=true;
+        loader.classList.add('hidden');
+        setTimeout(()=>loader.style.display='none',900);
+      }
+    }
+  };
+  img.onerror=()=>{loaded++};
+  img.src=GD(IDS[i]);
+  imgs[i]=img;
+}
+
+// ── SCROLL ──
+const t1=document.getElementById('t1');
+const t2=document.getElementById('t2');
+const t3=document.getElementById('t3');
+const t4=document.getElementById('t4');
+const scue=document.querySelector('.scroll-cue');
+
+function show(el,v){v?el.classList.add('on'):el.classList.remove('on')}
+
+function tick(){
+  if(!ready)return;
+  const sec=document.getElementById('hero');
+  const prog=Math.max(0,Math.min(1,-sec.getBoundingClientRect().top/(sec.offsetHeight-window.innerHeight)));
+  const f=Math.max(1,Math.min(TOTAL,Math.round(prog*(TOTAL-1))+1));
+  if(f!==cur){cur=f;drawFrame(f)}
+
+  // text choreography mapped to 210 frames
+  show(t1, f>=1  && f<=35);   // frames 1-35
+  show(t2, f>=61 && f<=95);   // frames 61-95
+  show(t3, f>=131&& f<=165);  // frames 131-165
+  show(t4, f>=175);            // frames 175-210
+
+  // fade scroll cue
+  scue.style.opacity=prog<.04?'1':Math.max(0,1-prog*25).toString();
+}
+
+let raf=false;
+window.addEventListener('scroll',()=>{if(!raf){requestAnimationFrame(()=>{tick();raf=false});raf=true}},{passive:true});
+</script>
+</body>
+</html>
